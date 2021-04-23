@@ -117,7 +117,7 @@ def fit_model(estimators,df,features,target,test_size,n_trials):
     """
     from sklearn.model_selection import train_test_split
 
-    print('Fitting for {}'.format(target))
+    print('Fitting for {}...'.format(target))
     cv_scores = []
     errors = []
     y_hats = []

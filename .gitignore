@@ -4,12 +4,12 @@ local/
 tmp*
 html/
 public*/
+*copy*
+*pdf*
+
 
 # results directory
 results/
-
-# copy files
-*copy*
 
 # data files that should not be included
 log.*

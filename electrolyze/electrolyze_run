@@ -39,9 +39,13 @@ max_iter = int(inputs['bayesian_optimization']['max_iter'])
 tolerance = float(inputs['bayesian_optimization']['tolerance'])
 n_rec = int(inputs['bayesian_optimization']['n_rec'])
 
-##### 1. Import Data #####
 
-os.mkdir(result_dir)
+##### 1. Import Data #####
+if not os.path.exists(data_dir):
+    raise NameError(data_dir+'does not exist!')
+if not os.path.exists(result_dir):
+    os.mkdir(result_dir)
+
 df_m = pd.read_csv(data_dir+'/measurements.csv')
 df_f = pd.read_csv(data_dir+'/formulations.csv')
 
@@ -83,7 +87,7 @@ if n_targets > 1:
 # Plot partial dependences
 index = [i for i in range(n_features)]
 fig, ax = plt.subplots(figsize=(20, 6))
-plot_partial_dependence(best_model, df_all[features], index, features, target, n_cols=n_features, ax=ax)
+plot_partial_dependence(best_model, df_all[features], index, features, targets[0], n_cols=n_features, ax=ax)
 
 
 
