@@ -144,14 +144,15 @@ def fit_model(estimators,df,features,target,test_size,n_trials):
     # Plot testing vs predicted data alongside 1-to-1 line
     x = np.linspace(0,np.max(df[target]))
     y = x
-    sns.set_context('talk')
+    sns.set_context('paper')
     fig, ax = plt.subplots(1,figsize=(5,5))
     ax.scatter(y_tests[best_ind],y_hats[best_ind])
     ax.plot(y,x,'black')
     ax.set_ylabel('Predicted {}'.format('Number of Cycles' if target=='Measurement-3' else target))
     ax.set_xlabel('Actual {}'.format('Number of Cycles' if target=='Measurement-3' else target))
     ax.set_title('{} - Actual VS Predicted'.format(target))
-    fig.savefig('best_fit_test.pdf')
+    if target='Measurement-3':
+        fig.savefig('best_fit_test.pdf')
     
     return best_est
 
