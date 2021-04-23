@@ -20,7 +20,7 @@ maintainer_email = re.search("__maintainer_email__ = '(.*)'", lines).group(1)
 description = re.search("__description__ = '(.*)'", lines).group(1)
 
 
-name = 'Electrolyze'
+name = 'electrolyze'
 
 setup(name=name,
       version=version,
@@ -28,7 +28,7 @@ setup(name=name,
       long_description=long_description,
       author=author,
       maintainer_email=maintainer_email,
-      scripts=glob.glob("main_run"),
+      scripts=glob.glob("electrolyze/main_run"),
       platforms=['any'],
       install_requires=['scipy',
                         'numpy',
