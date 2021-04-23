@@ -17,8 +17,12 @@ Here is a snippet of how to use the functions:
 		best_model = fit_model(list_of_models, df, feature_names, target_name, n_fitting_trials)
 		optimizer = bayesian_optimize(objective, bounds, constraints, max_time, max_iter, tolerance)
 
-Install by hitting::
-  python setup.py install
+Installation
+------------
+
+**Electrolyze** can be installed via ::
+
+    python setup.py install
 
 
 
