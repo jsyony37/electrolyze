@@ -1,12 +1,12 @@
-Electrolyze
+electrolyze
 =======
 
-**Electrolyze** is a tool for predicting the optimal compositions for
+**electrolyze** is a tool for predicting the optimal compositions for
 battery number of cycles. It uses Gaussian process regression followed
 by Bayesian optimization of the best-fit model to search the complex
 composition space for optimal battery life.
 
-**Electrolyze** is written in Python, and is interfaced with **scikit-learn**
+**electrolyze** is written in Python, and is interfaced with **scikit-learn**
 for machine learning and **GPyOpt** for Bayesian optimization. Useful functions
 are provided in `utiliities.py`.
 
@@ -20,7 +20,7 @@ Here is a snippet of how to use the functions:
 Installation
 ------------
 
-**Electrolyze** can be installed via ::
+**electrolyze** can be installed via ::
 
     python setup.py install
 
