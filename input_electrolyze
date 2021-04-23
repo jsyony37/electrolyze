@@ -1,6 +1,6 @@
 [basic]
 data_dir = ./data
-result_dir = ./result
+results_dir = ./result
 result_fname = my_recommendations.csv
 
 [model_fitting]
@@ -16,7 +16,7 @@ n_trials = 100
 
 [bayesian_optimization]
 # stop condition in seconds
-max_time  = 1500
+max_time  = 50
 max_iter  = 100
 tolerance = 1e-5
 # number of recommendations to make

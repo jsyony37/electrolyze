@@ -22,7 +22,7 @@ print(cwd)
 options, inputs = read_input_file()
 
 data_dir = inputs['basic']['data_dir']
-result_dir = inputs['basic']['result_dir']
+results_dir = inputs['basic']['results_dir']
 result_fname = inputs['basic']['result_fname']
 
 targets = literal_eval(inputs['model_fitting']['targets'])
@@ -40,11 +40,11 @@ tolerance = float(inputs['bayesian_optimization']['tolerance'])
 n_rec = int(inputs['bayesian_optimization']['n_rec'])
 
 
-##### 1. Import Data #####
+##### 1. Get Data #####
 if not os.path.exists(data_dir):
     raise NameError(data_dir+'does not exist!')
-if not os.path.exists(result_dir):
-    os.mkdir(result_dir)
+if not os.path.exists(results_dir):
+    os.mkdir(results_dir)
 
 df_m = pd.read_csv(data_dir+'/measurements.csv')
 df_f = pd.read_csv(data_dir+'/formulations.csv')
@@ -60,6 +60,9 @@ df_all = pd.concat([df_f, df_m], axis=1) # combine into one df
 df_all = df_all.loc[:,~df_all.columns.duplicated()] # remove duplicate column
 column_names = df_all.columns
 
+# special treatment for this dataset...
+f_drop = df_all.loc[df_all['Additive-B']>0.1][df_all['Measurement-3']>350]['Formulation']
+df_all = df_all.loc[~df_all['Formulation'].apply(lambda x: x in f_drop.values)]
 
 
 ##### 2. Fit Model #####
@@ -108,8 +111,8 @@ bounds = [{'name': 'comp1', 'type': 'continuous', 'domain': (0,1)},
          ]
 
 # These constraints force the compositions to almost add up to 1 
-constraints = [{'name': 'constr_1', 'constraint': '0.9 - np.sum(x,axis=1)'},
-               {'name': 'constr_2', 'constraint': 'np.sum(x,axis=1) - 1.0'}]
+constraints = [{'name': 'constr_1', 'constraint': '0.9 - np.sum(x,axis=1)'}, # > 0.9
+               {'name': 'constr_2', 'constraint': 'np.sum(x,axis=1) - 1.0'}] # <= 1
 
 optimizer = bayesian_optimize(objective_function,bounds,constraints,max_time,max_iter,tolerance)
 
@@ -131,7 +134,7 @@ print('Top {} predicted number of cycles: \n {}'.format(n_rec,recommended_target
 # Create prediction dataframe -  don't forget to add back the dropped component (Additive-B)
 last_component = np.array([1 - recommended_compositions.sum(axis=1)]).T
 recommended_compositions_all = np.append(recommended_compositions,last_component,axis=1)
-all_features = features+drop[0]
+all_features = features+drop
 assert all_features == ingredients
 
 df_prediction = pd.DataFrame(index=index, columns=column_names)
@@ -143,4 +146,4 @@ for i in range(1,n_targets):
     df_prediction['Formulation'] = formula_name
 df_prediction.reset_index(inplace=True,drop=True)
 
-df_prediction.to_csv('results/{}'.format(result_fname))
+df_prediction.to_csv(results_dir+'/'+result_fname)
