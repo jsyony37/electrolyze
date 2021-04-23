@@ -17,6 +17,7 @@ from electrolyze.utilities import fit_model, pearson, featurize, test_error, bay
 ##### 1. Import Data #####
 
 cwd = os.getcwd()
+os.mkdir('results')
 df_m = pd.read_csv(cwd+'/data/measurements.csv')
 df_f = pd.read_csv(cwd+'/data/formulations.csv')
 
@@ -122,4 +123,4 @@ df_prediction['Measurement-2'] = measurement2_pred
 df_prediction['Measurement-1'] = measurement1_pred
 df_prediction['Formulation'] = formula_name
 df_prediction.reset_index(inplace=True,drop=True)
-df_prediction.to_csv('../results/{}'.format(file_name))
+df_prediction.to_csv('results/{}'.format(file_name))
