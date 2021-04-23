@@ -17,10 +17,9 @@ Here is a snippet of how to use the functions:
    best_model = fit_model(list_of_models, df, feature_names, target_name, n_fitting_trials)
    optimizer = bayesian_optimize(objective, bounds, constraints, max_time, max_iter, tolerance)
 
-The commandline driver is `electrolytes/main_run`, which jumps directly into fitting models
-and making predictions.
-
-A longer workflow is given in `workflow.ipynb`, where input datasets are explored further.
+The driver `electrolytes/main_run` is a quick on-the-fly model fitting and prediction tool
+that can be run on the commandline. A longer interactive workflow with additional data exploration
+and analysis is given in `workflow.ipynb`.
 		
 Installation
 ------------
