@@ -17,8 +17,11 @@ Here is a snippet of how to use the functions:
    best_model = fit_model(list_of_models, df, feature_names, target_name, n_fitting_trials)
    optimizer = bayesian_optimize(objective, bounds, constraints, max_time, max_iter, tolerance)
 
-The driver `electrolytes/main_run` is a quick on-the-fly model fitting and prediction tool
-that can be run on the commandline. It reads input file by the name of `input_electrolyze`.
+The driver `electrolytes/electrolyze_run` is a quick on-the-fly model fitting and prediction
+tool that can be run on the commandline. It reads input file by the name of `input_electrolyze`.
+After installation, it can be run just like ::
+
+  electrolyze_run
 
 A longer interactive workflow with additional data exploration and analysis is provided in
 `workflow.ipynb`.
@@ -28,7 +31,7 @@ Top-10 recommended formula are given in `recommendations.csv` file.
 Installation
 ------------
 
-**electrolyze** can be installed via ::
+**electrolyze** requires python3.6 at minimum and can be installed via ::
 
   python setup.py install
 
