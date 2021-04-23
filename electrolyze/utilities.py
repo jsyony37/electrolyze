@@ -3,6 +3,24 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+import os
+from argparse import ArgumentParser
+from configparser import ConfigParser
+
+
+def read_input_file():
+    """ Reads electrolyze input file """
+    parser = ArgumentParser()
+    parser.add_argument("--file", "-f", help="settings file. Default input_electrolyze", default='input_electrolyze')
+    options = parser.parse_args()
+    inputs = ConfigParser()
+    if not os.path.exists(options.file):
+        print("ERROR: settings file {} not found".format(options.file))
+        exit(-1)
+    inputs.read(options.file)
+
+    return options, inputs
+
 
 def pearson(X,Y):
     """
@@ -98,7 +116,8 @@ def fit_model(estimators,df,features,target,test_size,n_trials):
         The best estimator by testing error   
     """
     from sklearn.model_selection import train_test_split
-    
+
+    print('Fitting for {}'.format(target))
     cv_scores = []
     errors = []
     y_hats = []
@@ -119,7 +138,6 @@ def fit_model(estimators,df,features,target,test_size,n_trials):
                 all_estimators.append(est)
     errors = np.array(errors)
     best_ind = np.where(errors == np.min(errors))[0][0] # select the lowest-error model index
-    print('BEST:',best_ind)
     print('Error:',errors[best_ind])
     best_est = all_estimators[best_ind]
     
@@ -133,6 +151,7 @@ def fit_model(estimators,df,features,target,test_size,n_trials):
     ax.set_ylabel('Predicted {}'.format('Number of Cycles' if target=='Measurement-3' else target))
     ax.set_xlabel('Actual {}'.format('Number of Cycles' if target=='Measurement-3' else target))
     ax.set_title('Estimator {} - Actual VS Predicted'.format(best_ind))
+    fig.savefig('best_fit_test.pdf')
     
     return best_est
 
