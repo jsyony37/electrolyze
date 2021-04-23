@@ -5,6 +5,12 @@ tmp*
 html/
 public*/
 
+# results directory
+results/
+
+# copy files
+*copy*
+
 # data files that should not be included
 log.*
 *.traj

@@ -11,7 +11,7 @@ if sys.version_info < (3, 6, 0, 'final', 0):
 with open('README.rst', encoding='utf-8') as fd:
     long_description = fd.read()
 
-with open('__init__.py') as fd:
+with open('electrolyze/__init__.py') as fd:
     lines = '\n'.join(fd.readlines())
 
 version = re.search("__version__ = '(.*)'", lines).group(1)
@@ -28,7 +28,7 @@ setup(name=name,
       long_description=long_description,
       author=author,
       maintainer_email=maintainer_email,
-#      scripts=glob.glob("main_run"),
+      scripts=glob.glob("main_run"),
       platforms=['any'],
       install_requires=['scipy',
                         'numpy',
