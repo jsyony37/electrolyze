@@ -1,0 +1,142 @@
+#!/usr/bin/python
+
+##########################
+### Commandline Driver ###
+##########################
+
+import numpy as np
+import scipy as sp
+import pandas as pd
+import os, sys
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from ast import literal_eval
+
+from electrolyze.utilities import *
+
+cwd = os.getcwd()
+print(cwd)
+
+##### 0. Read Inputs #####
+options, inputs = read_input_file()
+
+data_dir = inputs['basic']['data_dir']
+result_dir = inputs['basic']['result_dir']
+result_fname = inputs['basic']['result_fname']
+
+targets = literal_eval(inputs['model_fitting']['targets'])
+n_targets = len(targets)
+features = literal_eval(inputs['model_fitting']['features'])
+drop = literal_eval(inputs['model_fitting']['drop'])
+features =  [f for f in features if f not in drop]
+n_features = len(features)-len(drop)
+test_size = float(inputs['model_fitting']['test_size'])
+n_trials = int(inputs['model_fitting']['n_trials'])
+
+max_time = float(inputs['bayesian_optimization']['max_time'])
+max_iter = int(inputs['bayesian_optimization']['max_iter'])
+tolerance = float(inputs['bayesian_optimization']['tolerance'])
+n_rec = int(inputs['bayesian_optimization']['n_rec'])
+
+##### 1. Import Data #####
+
+os.mkdir(result_dir)
+df_m = pd.read_csv(data_dir+'/measurements.csv')
+df_f = pd.read_csv(data_dir+'/formulations.csv')
+
+# Ensure that all mass fractions of all ingredients add up to 1
+ingredients = list(df_f.drop(columns='Formulation').columns)
+if all(df_f[ingredients].sum(axis=1).round(10) == 1.0):
+    print('Check: all mass fractions add up to 1')
+else:
+    raise ValueError('Some mass fractions do not add up to 1')
+
+df_all = pd.concat([df_f, df_m], axis=1) # combine into one df 
+df_all = df_all.loc[:,~df_all.columns.duplicated()] # remove duplicate column
+column_names = df_all.columns
+
+
+
+##### 2. Fit Model #####
+
+from sklearn.model_selection import GridSearchCV
+from sklearn.inspection import partial_dependence, plot_partial_dependence
+from sklearn.gaussian_process import GaussianProcessRegressor
+
+# Input parameters
+
+parameters = {'alpha':[10**i for i in range(-10,3)]}
+GPReg = GaussianProcessRegressor()
+GPRegGS = GridSearchCV(GPReg,parameters,cv=5) # search for optimal alpha value    
+
+# Fit models and select the best trained one
+estimators = [GPRegGS] # list of model types to try
+best_model = fit_model(estimators,df_all,features,targets[0],test_size,n_trials) # train on main target
+if n_targets > 1:
+    other_models = []
+    for i in range(1,n_targets):
+        extra_model = fit_model(estimators,df_all,features,targets[i],test_size,n_trials) # train on other targets
+        other_models.append(extra_model)
+
+
+# Plot partial dependences
+index = [i for i in range(n_features)]
+fig, ax = plt.subplots(figsize=(20, 6))
+plot_partial_dependence(best_model, df_all[features], index, features, target, n_cols=n_features, ax=ax)
+
+
+
+##### 3.Bayesian optimization over the best model to maximize cycle life #####
+
+def objective_function(X):
+    predicted_cycle = best_model.predict(X)[0]
+    return -predicted_cycle # negative cycles to be MINIMIZED
+
+# Bounds for each component mass fractions
+bounds = [{'name': 'SaltA', 'type': 'continuous', 'domain': (0,1)},
+          {'name': 'SaltB', 'type': 'continuous', 'domain': (0,1)},
+          {'name': 'SaltC', 'type': 'continuous', 'domain': (0,1)},
+          {'name': 'SolventA', 'type': 'continuous', 'domain': (0,1)},
+          {'name': 'SolventB', 'type': 'continuous', 'domain': (0,1)},
+          {'name': 'SolventC', 'type': 'continuous', 'domain': (0,1)},
+          {'name': 'AdditiveA', 'type': 'continuous', 'domain': (0,1)}
+         ]
+
+# These constraints force the compositions to almost add up to 1 
+constraints = [{'name': 'constr_1', 'constraint': '0.9 - np.sum(x,axis=1)'},
+               {'name': 'constr_2', 'constraint': 'np.sum(x,axis=1) - 1.0'}]
+
+optimizer = bayesian_optimize(objective_function,bounds,constraints,max_time,max_iter,tolerance)
+
+optimizer.plot_convergence()
+
+
+
+##### 4. Recommend Best Compositions
+
+# Select best compositions
+index = np.argsort(optimizer.Y.flatten())[range(n_rec)]
+
+recommended_compositions = optimizer.X[index]
+recommended_targets = -optimizer.Y.flatten()[index]
+formula_name = ['F_pred-{}'.format(i) for i in range(n_rec)]
+
+print('Top {} predicted number of cycles: \n {}'.format(n_rec,recommended_targets))
+
+# Create prediction dataframe -  don't forget to add back the dropped component (Additive-B)
+last_component = np.array([1 - recommended_compositions.sum(axis=1)]).T
+recommended_compositions_all = np.append(recommended_compositions,last_component,axis=1)
+all_features = features+drop[0]
+assert all_features == ingredients
+
+df_prediction = pd.DataFrame(index=index, columns=column_names)
+df_prediction[all_features] = recommended_compositions_all
+df_prediction[target[0]] = recommended_targets
+for i in range(1,n_targets):
+    other_model = other_models[i]
+    df_prediction[targets[i]] = other_model.predict(recommended_compositions)
+    df_prediction['Formulation'] = formula_name
+df_prediction.reset_index(inplace=True,drop=True)
+
+df_prediction.to_csv('results/{}'.format(result_fname))
