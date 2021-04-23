@@ -18,8 +18,10 @@ Here is a snippet of how to use the functions:
    optimizer = bayesian_optimize(objective, bounds, constraints, max_time, max_iter, tolerance)
 
 The driver `electrolytes/main_run` is a quick on-the-fly model fitting and prediction tool
-that can be run on the commandline. A longer interactive workflow with additional data exploration
-and analysis is given in `workflow.ipynb`.
+that can be run on the commandline. It reads input file by the name of `input_electrolyze`.
+
+A longer interactive workflow with additional data exploration and analysis is provided in
+`workflow.ipynb`.
 		
 Installation
 ------------

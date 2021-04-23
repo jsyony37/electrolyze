@@ -76,7 +76,7 @@ GPRegGS = GridSearchCV(GPReg,parameters,cv=5) # search for optimal alpha value
 
 # Fit models and select the best trained one
 estimators = [GPRegGS] # list of model types to try
-best_model = fit_model(estimators,df_all,features,targets[0],test_size,n_trials) # train on main target
+best_model = fit_model(estimators,df_all,features,targets[0],test_size,n_trials) # train on the main target
 if n_targets > 1:
     other_models = []
     for i in range(1,n_targets):
@@ -98,13 +98,13 @@ def objective_function(X):
     return -predicted_cycle # negative cycles to be MINIMIZED
 
 # Bounds for each component mass fractions
-bounds = [{'name': 'SaltA', 'type': 'continuous', 'domain': (0,1)},
-          {'name': 'SaltB', 'type': 'continuous', 'domain': (0,1)},
-          {'name': 'SaltC', 'type': 'continuous', 'domain': (0,1)},
-          {'name': 'SolventA', 'type': 'continuous', 'domain': (0,1)},
-          {'name': 'SolventB', 'type': 'continuous', 'domain': (0,1)},
-          {'name': 'SolventC', 'type': 'continuous', 'domain': (0,1)},
-          {'name': 'AdditiveA', 'type': 'continuous', 'domain': (0,1)}
+bounds = [{'name': 'comp1', 'type': 'continuous', 'domain': (0,1)},
+          {'name': 'comp2', 'type': 'continuous', 'domain': (0,1)},
+          {'name': 'comp3', 'type': 'continuous', 'domain': (0,1)},
+          {'name': 'comp4', 'type': 'continuous', 'domain': (0,1)},
+          {'name': 'comp5', 'type': 'continuous', 'domain': (0,1)},
+          {'name': 'comp6', 'type': 'continuous', 'domain': (0,1)},
+          {'name': 'comp7', 'type': 'continuous', 'domain': (0,1)}
          ]
 
 # These constraints force the compositions to almost add up to 1 

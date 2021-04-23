@@ -6,8 +6,8 @@ result_fname = my_recommendations.csv
 [model_fitting]
 # main target must appear first
 targets = ['Measurement-3','Measurement-1','Measurement-2']
-# Choose only 7 out of 8 components
 features = ['Salt-A','Salt-B','Salt-C','Solvent-A','Solvent-B','Solvent-C','Additive-A','Additive-B']
+# drop a parameter to obey mass fraction constraint (sum = 1)
 drop = ['Additive-B']
 # for test-train splitting
 test_size = 0.25
@@ -15,8 +15,9 @@ test_size = 0.25
 n_trials = 100 
 
 [bayesian_optimization]
-# Stop conditions
+# stop condition in seconds
 max_time  = 1500
 max_iter  = 100
 tolerance = 1e-5
+# number of recommendations to make
 n_rec = 10
