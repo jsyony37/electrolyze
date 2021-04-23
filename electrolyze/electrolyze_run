@@ -22,7 +22,7 @@ print(cwd)
 options, inputs = read_input_file()
 
 data_dir = inputs['basic']['data_dir']
-results_dir = inputs['basic']['results_dir']
+results_dir = './results'
 result_fname = inputs['basic']['result_fname']
 
 targets = literal_eval(inputs['model_fitting']['targets'])
@@ -110,17 +110,16 @@ constraints = [{'name': 'constr_1', 'constraint': '0.9 - np.sum(x,axis=1)'}, # >
 
 print('Running Bayesian optimization...')
 optimizer = bayesian_optimize(objective_function,bounds,constraints,max_time,max_iter,tolerance)
+optimizer.plot_convergence(results_dir+'/convergence.pdf')
 print('Finished!')
 
-optimizer.plot_convergence()
 
 
 
-##### 4. Recommend Best Compositions
+##### 4. Recommend best formulations #####
 
 # Select best compositions
 index = np.argsort(optimizer.Y.flatten())[range(n_rec)]
-
 recommended_compositions = optimizer.X[index]
 recommended_targets = -optimizer.Y.flatten()[index]
 formula_name = ['F_pred-{}'.format(i) for i in range(n_rec)]
