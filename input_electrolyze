@@ -1,6 +1,6 @@
 [basic]
 data_dir = ./data
-results_dir = ./result
+results_dir = ./results
 result_fname = my_recommendations.csv
 
 [model_fitting]
