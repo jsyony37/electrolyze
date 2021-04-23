@@ -22,7 +22,9 @@ that can be run on the commandline. It reads input file by the name of `input_el
 
 A longer interactive workflow with additional data exploration and analysis is provided in
 `workflow.ipynb`.
-		
+
+Top-10 recommended formula are given in `recommendations.csv` file.
+
 Installation
 ------------
 
