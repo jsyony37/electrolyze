@@ -1,8 +1,8 @@
 electrolyze
 =======
 
-**electrolyze** is a tool for predicting the optimal compositions for
-battery number of cycles. It uses Gaussian process regression followed
+**electrolyze** is a tool for predicting the optimal electrolyte compositions
+for battery number of cycles. It uses Gaussian process regression followed
 by Bayesian optimization of the best-fit model to search the complex
 composition space for optimal battery life.
 
