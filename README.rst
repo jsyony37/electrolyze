@@ -2,9 +2,10 @@ electrolyze
 =======
 
 **electrolyze** is a tool for recommending the optimal electrolyte compositions
-for battery number of cycles. It uses Gaussian process regression followed
-by Bayesian optimization of the best-fit regression model to search the complex
-composition space for optimal battery life.
+for battery number of cycles. It performs machine learning model fitting followed
+bt Bayesian optimization of the best-fit model to search the complex composition
+space for optimal battery life. The default model used is Gaussian process, but
+any user-desired model can be added to the contest for best fit.
 
 **electrolyze** is written in Python, and is interfaced with **scikit-learn**
 for machine learning and **GPyOpt** for Bayesian optimization. Useful functions
