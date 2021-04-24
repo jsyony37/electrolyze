@@ -106,7 +106,7 @@ def run():
         ax=ax,
     )
 
-    ##### 3.Bayesian optimization over the best model to maximize cycle life #####
+    ##### 3. Bayesian optimization over the best model to maximize cycle life #####
 
     def objective_function(X):
         predicted_cycle = best_model.predict(X)[0]
@@ -123,11 +123,11 @@ def run():
         {"name": "comp7", "type": "continuous", "domain": (0, 1)},
     ]
 
-    # These constraints force the compositions to almost add up to 1
+    # These constrains the compositions to almost add up to 1 (save for the dropped component)
     constraints = [
-        {"name": "constr_1", "constraint": "0.9 - np.sum(x,axis=1)"},  # > 0.9
-        {"name": "constr_2", "constraint": "np.sum(x,axis=1) - 1.0"},
-    ]  # <= 1
+        {"name": "constr_1", "constraint": "0.9 - np.sum(x,axis=1)"}, # >= 0.9
+        {"name": "constr_2", "constraint": "np.sum(x,axis=1) - 1.0"}, # <= 1.0
+    ] 
 
     print("Running Bayesian optimization...")
     optimizer = bayesian_optimize(
