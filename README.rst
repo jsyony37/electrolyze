@@ -22,7 +22,7 @@ tool that can be run directly on the commandline, and can be called as ::
   electrolyze
 
 It reads input file by the name of `input_electrolyze`. A longer interactive workflow
-with additional data exploration and analysis is provided in `workflow.ipynb`. 
+with more extensive data exploration and analysis is provided in `workflow.ipynb`. 
 
 Top-10 recommended formula are given in `best_recommendations.csv` file in the main
 directory. Running `electrolyze` will deposit new results in a new directory.
