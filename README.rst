@@ -3,7 +3,7 @@ electrolyze
 
 **electrolyze** is a tool for recommending the optimal electrolyte compositions
 for battery number of cycles. It performs machine learning model fitting followed
-bt Bayesian optimization of the best-fit model to search the complex composition
+by Bayesian optimization of the best-fit model to search the complex composition
 space for optimal battery life. The default model used is Gaussian process, but
 any user-desired model can be added to the contest for best fit.
 
