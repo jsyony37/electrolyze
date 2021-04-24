@@ -16,8 +16,8 @@ are provided in `utiliities.py`. Here is a snippet of how to use the functions:
    best_model = fit_model(list_of_models, df, feature_names, target_name, n_fitting_trials)
    optimizer = bayesian_optimize(objective_function, bounds, constraints, max_time, max_iter, tolerance)
 
-The driver `electrolyze` is a quick on-the-fly model-fitting and prediction tool
-that can be run directly on the commandline, and can be called as ::
+The driver `electrolyze` is a quick on-the-fly model-fitting and recommendation
+tool that can be run directly on the commandline, and can be called as ::
 
   electrolyze
 
