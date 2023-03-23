@@ -82,8 +82,7 @@ def run():
 
     ##### 2. Fit Model #####
 
-    # Input parameters
-
+    # Define models to try and their input parameters
     parameters = {"alpha": [10 ** i for i in range(-10, 3)]}
     GPReg = GaussianProcessRegressor()
     GPRegGS = GridSearchCV(GPReg, parameters, cv=5)  # search for optimal alpha value
@@ -125,9 +124,9 @@ def run():
 
     # These constraints force the compositions to almost add up to 1
     constraints = [
-        {"name": "constr_1", "constraint": "0.9 - np.sum(x,axis=1)"},  # > 0.9
-        {"name": "constr_2", "constraint": "np.sum(x,axis=1) - 1.0"},
-    ]  # <= 1
+        {"name": "constr_1", "constraint": "0.9 - np.sum(x,axis=1)"},  # >= 0.9
+        {"name": "constr_2", "constraint": "np.sum(x,axis=1) - 1.0"},  # <= 1 
+    ] 
 
     print("Running Bayesian optimization...")
     optimizer = bayesian_optimize(
