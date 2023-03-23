@@ -191,7 +191,7 @@ def test_error(y_hat, y_test):
 
 
 def bayesian_optimize(
-    objective_func, bounds, constraints, max_time, max_iter, tolerance, initial_design=None
+        objective_func, feasible_region, max_time, max_iter, tolerance, initial_design=None
 ):
     """
     Sets up and performs Bayesian optimization using GPyOpt
@@ -219,9 +219,6 @@ def bayesian_optimize(
         The optimization object containing points of exploration
     """
     import GPyOpt
-
-    # Define the region where sampling is to be done
-    feasible_region = GPyOpt.Design_space(space=bounds, constraints=constraints)
 
     if initial_design is None:
         initial_design = GPyOpt.experiment_design.initial_design(

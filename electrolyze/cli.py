@@ -126,11 +126,14 @@ def run():
     constraints = [
         {"name": "constr_1", "constraint": "0.9 - np.sum(x,axis=1)"},  # >= 0.9
         {"name": "constr_2", "constraint": "np.sum(x,axis=1) - 1.0"},  # <= 1 
-    ] 
+    ]
+    
+    # Define the region where sampling is to be done
+    feasible_region = GPyOpt.Design_space(space=bounds, constraints=constraints)
 
     print("Running Bayesian optimization...")
     optimizer = bayesian_optimize(
-        objective_function, bounds, constraints, max_time, max_iter, tolerance
+        objective_function, feasible_region, max_time, max_iter, tolerance
     )
     optimizer.plot_convergence(results_dir + "/convergence.pdf")
     print("Finished!")
